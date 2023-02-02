@@ -1,6 +1,6 @@
 // ----------------------- Playback (Seek, Loop, Play) | Script ------------------------- //
 
-import { getStyle, toTimeStamp, shuffle } from "./helper.js"
+import { createBlobUrl, getStyle, toTimeStamp, shuffle } from "./helper.js"
 
 const musicPlayer = document.querySelector(".music-player")
 const playButton = musicPlayer.querySelector(".control-btns .play-btn")
@@ -65,11 +65,7 @@ const MAXSONGS = 20
 // Load Song
 const loadSong = (audio, songnumber) => {
     let song = PLAYLIST.songs[songnumber]
-    audio.src = URL.createObjectURL(song)
-    audio.onplay = () => {
-        URL.revokeObjectURL(audio.src)
-        audio.onplay = null
-    }
+    audio.src = createBlobUrl(song) // create blob url from file
     jsmediatags.read(song, {
         onSuccess: getMetadata,
         onError: (error) => { console.log(error) }
@@ -151,7 +147,6 @@ const nextButton = musicPlayer.querySelector(".control-btns .next-btn")
 const prevButton = musicPlayer.querySelector(".control-btns .prev-btn")
 const timeSeekbar = musicPlayer.querySelector(".player-controls .progress")
 const seekSlider = timeSeekbar.querySelector(".slider")
-const seekPointerWidth = getStyle(seekSlider, "width", "::after")
 const songDuration = musicPlayer.querySelector(".durations .total")
 const songCurrentTime = musicPlayer.querySelector(".durations .current")
 const musicProgress = musicPlayer.querySelector(".music-progress")
@@ -183,7 +178,7 @@ const skipPrev = () => {
 // Make seekbar progress by both visual & song time
 const moveSeekSlider = (currentTime, duration) => {
     seekSlider.style.width = `${currentTime / duration * 100}%`
-    const isWidthBigger = getStyle(seekSlider, "width") > seekPointerWidth
+    const isWidthBigger = getStyle(seekSlider, "width") > getStyle(seekSlider, "width", "::after") // Slider progress > Slider width
     seekSlider.style.justifyContent = isWidthBigger ? "flex-end" : "space-between"
 }
 var makeProgress = true
@@ -194,7 +189,7 @@ const moveSeekSliderWithCursor = (event) => {
 }
 const changeSongTime = (event) => { // Play song from the new seeked time
     let audio = musicPlayer.querySelector("#audio-player")
-    let newtime = event.offsetX + (seekPointerWidth / 2)
+    let newtime = event.offsetX + (getStyle(seekSlider, "width", "::after") / 2)
     audio.currentTime = (newtime / timeSeekbar.clientWidth) * audio.duration
     makeProgress = true
     musicProgress.removeEventListener("mousemove", moveSeekSliderWithCursor)

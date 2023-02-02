@@ -1,6 +1,22 @@
 // ----------------------- Common Helper | Scripts ------------------------- //
 
 
+// Create Blob url from file & reference it one localstorage
+export const BLOBURL_K = "music-k-blob-file-url"
+export const createBlobUrl = (file) => {
+    clearBlobUrl() // clear old url
+    let url = URL.createObjectURL(file)
+    window.localStorage.setItem(BLOBURL_K, url)
+    return url
+}
+const clearBlobUrl = () => {
+    let blobUrl = window.localStorage.getItem(BLOBURL_K)
+    if (blobUrl != null && blobUrl != "") {
+        URL.revokeObjectURL(blobUrl)
+        window.localStorage.removeItem(BLOBURL_K)
+    }
+}
+
 // Element style as number
 export const getStyle = (el, style, psedo = null) => {
     let value = window.getComputedStyle(el, psedo)[style]
