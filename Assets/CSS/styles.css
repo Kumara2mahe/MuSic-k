@@ -37,12 +37,18 @@ body {
     align-items: center;
     justify-content: center;
     background: var(--gradient-bottom) no-repeat center/cover;
+    -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    height: 100vh;
+    min-height: 650px;
     margin: 0;
     padding: 3em;
 }
 
 body.dark-mode {
+    background-image: none;
+    background-color: var(--eerieblack);
+    -webkit-backdrop-filter: blur(36px);
     backdrop-filter: blur(36px);
 }
 
@@ -52,7 +58,7 @@ a {
 }
 
 .max-height {
-    height: 100vh;
+    min-height: initial;
 }
 
 .fade-out {
@@ -153,7 +159,11 @@ footer.copyrights {
     margin-top: 2em;
 }
 
-footer.copyrights .separator {
+body.dark-mode .copyrights {
+    color: var(--greyweb);
+}
+
+body:not(.dark-mode) footer.copyrights .separator {
     color: var(--eerieblack);
 }
 

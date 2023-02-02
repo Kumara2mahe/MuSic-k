@@ -34,9 +34,6 @@ export const setupPlayback = (audio) => {
         audio.loop = false
         toggleLoop(audio)
     })
-
-    // Dark Mode
-    musicPlayer.querySelector(".dark-mode-btn").addEventListener("click", switchDarkMode)
 }
 
 // Choose/Resume/Pause music Playback
@@ -227,9 +224,4 @@ const toggleLoop = (audio) => {
         })
     }
     else audio.loop = true
-}
-
-// Dark Mode
-const switchDarkMode = () => {
-    document.body.classList.toggle("dark-mode")
 }

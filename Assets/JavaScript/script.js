@@ -4,7 +4,6 @@ import { setVolumeControls } from "./volume.js"
 
 const copyrights = document.querySelector("footer.copyrights")
 const musicPlayer = document.querySelector(".music-player")
-musicPlayer.classList.add("invisible", "fade-out")
 
 // ------- Loading Launcher ------- //
 window.addEventListener("DOMContentLoaded", () => {
@@ -13,6 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         launcher.classList.add("fade-out")
         makeVisible(musicPlayer)
+        switchDarkMode() // Switch to dark mode if choosen
         setTimeout(() => {
             launcher.remove()
             musicPlayer.classList.replace("fade-out", "fade-in")
@@ -21,14 +21,34 @@ window.addEventListener("DOMContentLoaded", () => {
         }, 300)
     }, 1000)
 })
-const audio = musicPlayer.querySelector("#audio-player")
+
+// Toggle Dark Mode
+const THEME = "music-k-theme", D_MODE = "dark-mode", DK = "dark"
+const switchDarkMode = (event) => {
+    const isDarkmode = window.localStorage.getItem(THEME) == DK
+    if (event != null) {
+        if (isDarkmode) {
+            window.localStorage.removeItem(THEME)
+            document.body.classList.remove(D_MODE)
+        }
+        else {
+            window.localStorage.setItem(THEME, DK)
+            document.body.classList.add(D_MODE)
+        }
+    }
+    else if (isDarkmode) {
+        document.body.classList.add(D_MODE)
+    }
+}
+const darkModeBtn = musicPlayer.querySelector(".dark-mode-btn")
+darkModeBtn.addEventListener("click", switchDarkMode)
 
 // Set up Playback
+const audio = musicPlayer.querySelector("#audio-player")
 setupPlayback(audio)
 
 // Volume Controls
 setVolumeControls(audio)
-
 
 // ------ SleepTimer | Scripts ----- //
 const sleepTimerBtn = musicPlayer.querySelector(".control-btns .sleeptimer-btn"), ON = "on"

@@ -41,7 +41,7 @@
 
 #### Dark Mode
 
-- User can switch between dark & light mode
+- User can switch between dark & light mode, and it is remembered even after reload using localstorage.
 
 <br>
 
