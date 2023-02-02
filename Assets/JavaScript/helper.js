@@ -1,14 +1,10 @@
 // ----------------------- Common Helper | Scripts ------------------------- //
 
 
-// To convert px string to number
-export const pxToNumber = (px) => {
-    return Number(px.replace("px", ""))
-}
-
-// To get element styles
-export const getStyle = (el, psedo = null) => {
-    return window.getComputedStyle(el, psedo)
+// Element style as number
+export const getStyle = (el, style, psedo = null) => {
+    let value = window.getComputedStyle(el, psedo)[style]
+    return Number(value.replace("px", ""))
 }
 
 // ---- Seconds to Timestamp | Script ------ //

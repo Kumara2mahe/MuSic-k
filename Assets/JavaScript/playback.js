@@ -1,6 +1,6 @@
 // ----------------------- Playback (Seek, Loop, Play) | Script ------------------------- //
 
-import { pxToNumber, getStyle, toTimeStamp, shuffle } from "./helper.js"
+import { getStyle, toTimeStamp, shuffle } from "./helper.js"
 
 const musicPlayer = document.querySelector(".music-player")
 const playButton = musicPlayer.querySelector(".control-btns .play-btn")
@@ -132,30 +132,32 @@ const activeSkipSong = (audio) => {
     prevButton.addEventListener("click", skipPrev)
     audio.addEventListener("ended", skipNext)
     audio.addEventListener("timeupdate", () => {
-        let duration = isNaN(audio.duration) ? 0 : audio.duration, currentTime = audio.currentTime, isWidthBigger
+        let duration = isNaN(audio.duration) ? 0 : audio.duration
+        let currentTime = audio.currentTime
         if (songDuration.innerHTML != duration) {
             songDuration.innerHTML = `${toTimeStamp(duration, false)}`
         }
         songCurrentTime.innerHTML = `${toTimeStamp(currentTime, false, songDuration.innerHTML.length > 5)}`
 
         // Moving Seek Slider
-        seekSlider.style.width = `${currentTime / duration * 100}%`
-        isWidthBigger = pxToNumber(getStyle(seekSlider).width) > seekPointerWidth
-        seekSlider.style.justifyContent = isWidthBigger ? "flex-end" : "space-between"
+        if (makeProgress) {
+            moveSeekSlider(currentTime, duration)
+        }
     })
     // Change Song time in Seekbar
-    timeSeekbar.addEventListener("click", (event) => {
-        let newtime = event.offsetX + (seekPointerWidth / 2)
-        audio.currentTime = (newtime / timeSeekbar.clientWidth) * audio.duration
+    timeSeekbar.addEventListener("mousedown", () => {
+        musicProgress.addEventListener("mousemove", moveSeekSliderWithCursor)
+        window.addEventListener("mouseup", changeSongTime)
     })
-    const seekPointerWidth = pxToNumber(getStyle(seekSlider, "::after").width)
 }
 const nextButton = musicPlayer.querySelector(".control-btns .next-btn")
 const prevButton = musicPlayer.querySelector(".control-btns .prev-btn")
 const timeSeekbar = musicPlayer.querySelector(".player-controls .progress")
 const seekSlider = timeSeekbar.querySelector(".slider")
+const seekPointerWidth = getStyle(seekSlider, "width", "::after")
 const songDuration = musicPlayer.querySelector(".durations .total")
 const songCurrentTime = musicPlayer.querySelector(".durations .current")
+const musicProgress = musicPlayer.querySelector(".music-progress")
 
 // Skip to Next Song
 const skipNext = () => {
@@ -180,6 +182,28 @@ const skipPrev = () => {
         loadSong(audio, --PLAYLIST.playing)
     }
 }
+
+// Make seekbar progress by both visual & song time
+const moveSeekSlider = (currentTime, duration) => {
+    seekSlider.style.width = `${currentTime / duration * 100}%`
+    const isWidthBigger = getStyle(seekSlider, "width") > seekPointerWidth
+    seekSlider.style.justifyContent = isWidthBigger ? "flex-end" : "space-between"
+}
+var makeProgress = true
+const moveSeekSliderWithCursor = (event) => {
+    let cursorPos = event.layerX - Math.floor(getStyle(musicPlayer, "paddingLeft"))
+    moveSeekSlider(cursorPos, getStyle(timeSeekbar, "width"))
+    makeProgress = false
+}
+const changeSongTime = (event) => { // Play song from the new seeked time
+    let audio = musicPlayer.querySelector("#audio-player")
+    let newtime = event.offsetX + (seekPointerWidth / 2)
+    audio.currentTime = (newtime / timeSeekbar.clientWidth) * audio.duration
+    makeProgress = true
+    musicProgress.removeEventListener("mousemove", moveSeekSliderWithCursor)
+    window.removeEventListener("mouseup", changeSongTime)
+}
+// -------------- //
 
 // Toggle Loop Mode
 const toggleLoop = (audio) => {

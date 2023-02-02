@@ -37,7 +37,7 @@
 
 - Volume seeking: change volume by both drag or click on volume slider
 - Mute&ensp;<img src="https://drive.google.com/uc?export=view&id=1bsAfDtNBdIv4kCGIe1BBDh8mQRX31btf" alt="mute" width="20" height="20">: can mute/unmute the volume by click
-- Song seeking: change song time by click on the song duration progress bar
+- Song seeking: change song time by both drag or click on the song duration progress bar
 
 #### Dark Mode
 
