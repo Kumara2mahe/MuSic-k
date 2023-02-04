@@ -66,6 +66,23 @@
 
 <br>
 
+## Screenshots
+
+- <a href="https://drive.google.com/file/d/15kI-pTDGNUky8g5ifxmw1i_88nX2nBmh/view?usp=share_link" target="_blank" title="click to view on fullscreen">
+    <p>Playing a song at light mode</p>
+    <img src="https://drive.google.com/uc?export=view&id=1b6YQUkONcnK9fgYGFsVrKpdHvV5lDarw">
+  </a>
+- <a href="https://drive.google.com/file/d/1QkZEV4CynLN6pUHvpHCLN5xXbl1LLf2t/view?usp=share_link" target="_blank" title="click to view on fullscreen">
+    <p>Showing Volume controls, when playing a song at dark mode</p>
+    <img src="https://drive.google.com/uc?export=view&id=15VBEy1Z6IeZ5V-1ConqeqqdRgQxUIO4x">
+  </a>
+- <a href="https://drive.google.com/file/d/1iv7AgrSLnKF0qpfwdbC5P9YmYEFgBX4q/view?usp=share_link" target="_blank" title="click to view on fullscreen">
+    <p>Showing song queue, when playing song at light mode</p>
+    <img src="https://drive.google.com/uc?export=view&id=1Hife1uWVy87KPbxbj-LVp90U2iy8psLU">
+  </a>
+
+<br>
+
 > Check Live Project at [here!](https://music-k-by-kumara.web.app)
 
 ### License
