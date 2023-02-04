@@ -43,6 +43,12 @@
 
 - User can switch between dark & light mode, and it is remembered even after reload using localstorage.
 
+#### Songs Queue&ensp;<img src="https://drive.google.com/uc?export=view&id=14oedEAsBgxN5Vmt4BH7DRDtHNXmxzPxP" alt="playlist" width="20" height="20">
+
+- Add Song: can add more songs as in the go, like in middle of playback
+- Switch Song: can now switch to the song it any order, by a single click
+- Remove Song&ensp;<img src="https://drive.google.com/uc?export=view&id=1xi96Uo44GSBV6Y2L-5pBpuFsFFvNsdsh" alt="remove" width="20" height="20">: song which are added by mistakes, can be now removed by a single click
+
 <br>
 
 ### 3rd-party Library

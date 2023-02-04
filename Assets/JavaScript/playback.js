@@ -1,32 +1,34 @@
 // ----------------------- Playback (Seek, Loop, Play) | Script ------------------------- //
 
-import { createBlobUrl, getStyle, toTimeStamp, shuffle } from "./helper.js"
+import { Playlist } from "./playlist.js"
+import { getStyle, toTimeStamp } from "./helper.js"
 
-const musicPlayer = document.querySelector(".music-player")
-const playButton = musicPlayer.querySelector(".control-btns .play-btn")
+
+const audio = Playlist.audioElement
+const musicPlayer = Playlist.musicPlayer
 const loopButton = musicPlayer.querySelector(".control-btns .loop-btn")
 const LOOPS = ["single", "infinite", "shuffle"]
-const PLAYBACK = ["resume", "pause"]
-
+const MAXSONGS = 300
 
 // Song Playlist
-var PLAYLIST = {
-    playing: null,
-    songs: []
-}
-
-// Make Element Visible
-export const makeVisible = (element) => {
-    element.classList.replace("invisible", "visible")
-}
+var PLAYLIST = new Playlist()
 
 // ----- Playback Initiator | Scripts ---- //
-export const setupPlayback = (audio) => {
+export const setupPlayback = () => {
 
     // Initiate playback
-    playButton.addEventListener("click", () => {
-        instantPlayback(audio)
-        audio.loop = loopButton.classList[2] == LOOPS[0]
+    musicPlayer.querySelector(".play-btn").addEventListener("click", instantPlayback)
+    audio.addEventListener("play", Playlist.playAnimation)
+    audio.addEventListener("pause", Playlist.pauseAnimation)
+    Playlist.clearBlobUrl() // clear file blob url
+
+    // Set Playlist Controls
+    musicPlayer.querySelector(".extend-q .add-songs-btn").addEventListener("click", instantPlayback)
+    musicPlayer.querySelector(".songs-q-btn").addEventListener("click", () => {
+        musicPlayer.classList.add("show-queue")
+        setTimeout(() => {
+            musicPlayer.addEventListener("click", isMouseOverQueue)
+        }, 100)
     })
 
     // Set Loop Mode
@@ -37,93 +39,79 @@ export const setupPlayback = (audio) => {
 }
 
 // Choose/Resume/Pause music Playback
-const instantPlayback = (audio) => {
-    if (audio.currentSrc == "") {
+const instantPlayback = (event) => {
+    let button = event.target, totalSongs = PLAYLIST.songcount
+    if (audio.src == "" || button.classList[0] == "add-songs-btn") {
         let input = document.createElement("input")
         Object.assign(input, { type: "file", accept: "audio/*", multiple: true })
         input.click()
         input.addEventListener("change", () => {
-            let songs = input.files
-            if (songs.length >= MAXSONGS) {
-                alert(`Too much songs selected, you can only select maximum of ${MAXSONGS}`)
-            }
-            else {
-                PLAYLIST.songs = [...songs]
-                loadSong(audio, 0)
-                activeSkipSong(audio)
-            }
+            loadAllSongs(input, totalSongs)
         })
         input.remove()
     }
-    else if (playButton.classList.contains(PLAYBACK[0])) {
-        playSong(audio)
-    }
-    else pauseSong(audio)
-}
-const MAXSONGS = 20
-
-// Load Song
-const loadSong = (audio, songnumber) => {
-    let song = PLAYLIST.songs[songnumber]
-    audio.src = createBlobUrl(song) // create blob url from file
-    jsmediatags.read(song, {
-        onSuccess: getMetadata,
-        onError: (error) => { console.log(error) }
-    })
-    PLAYLIST.playing = songnumber
-    playSong(audio)
-}
-const jsmediatags = window.jsmediatags
-
-// Get Song Metadata
-const getMetadata = (data) => {
-    let tags = data.tags, sCoverURL = "url('./Assets/Images/thumb.png')",
-        sTitle = "Unknown Track"
-
-    if (tags.hasOwnProperty("picture")) {
-        let arrayBuffer = tags.picture.data, format = tags.picture.format,
-            base64String = arrayBuffer.reduce((data, byte) => {
-                return data + String.fromCharCode(byte);
-            }, "");
-        sCoverURL = `url(data:${format};base64,${window.btoa(base64String)})`
-    }
-    // Showing Cover
-    document.body.style.backgroundImage = audioCover.style.backgroundImage = sCoverURL
-
-    if (tags.hasOwnProperty("title")) {
-        sTitle = tags.title
-    }
-    audioTitle.innerHTML = sTitle
-    makeVisible(audioTitle) // Showing Title
-
-    if (tags.hasOwnProperty("artist")) {
-        audioArtist.innerHTML = tags.artist
-        makeVisible(audioArtist) // Showing Artist
-    }
-}
-const audioCover = musicPlayer.querySelector(".cover-picture .thumb")
-const audioTitle = musicPlayer.querySelector(".music-title")
-const audioArtist = musicPlayer.querySelector(".music-artist")
-
-// Resume Playback
-const playSong = (audio) => {
-    audio.play()
-    playButton.classList.replace(PLAYBACK[0], PLAYBACK[1])
-    musicPlayer.classList.add("play")
+    else Playlist.switchPlaybackState()
+    audio.loop = loopButton.classList[2] == LOOPS[0]
 }
 
-// Pause Playback
-export const pauseSong = (audio) => {
-    audio.pause()
-    playButton.classList.replace(PLAYBACK[1], PLAYBACK[0])
-    musicPlayer.classList.remove("play")
+// Load all the selected songs
+const loadAllSongs = (input, totalSongs) => {
+    let songs = input.files
+    if (songs.length >= MAXSONGS) {
+        alert(`Too much songs selected, you can only select maximum of ${MAXSONGS} at a time`)
+    }
+    else {
+        let sIndex = 0, sLength = PLAYLIST.songcount = songs.length
+        for (let song; sIndex < sLength; sIndex++) {
+            jsmediatags.read(song = songs.item(sIndex), {
+                onSuccess: data => PLAYLIST.getMetaData(song, data.tags),
+                onError: () => {
+                    alert(`No MetaData Found from - (${song.name})\nTry again with proper Audio file.`)
+                    window.location.reload()
+                }
+            })
+        }
+        songDataVerifier(totalSongs)
+    }
+}
+
+// Verifiy all songs are loaded
+const songDataVerifier = (totalSongs) => {
+    const loadingBar = document.createElement("section")
+    loadingBar.classList.add("loading-bar")
+    loadingBar.innerHTML = "<div class='slider'></div>"
+    document.body.prepend(loadingBar)
+
+    // Checking all the song data is loaded
+    let songsCount = PLAYLIST.songcount, loader = 1
+    const scanner = setInterval(() => {
+        let fullyLoadedSongs = PLAYLIST.songs.slice(totalSongs).map((song) => {
+            return song.title != undefined && song.metaData != undefined && song.metaData.artist != undefined && song.metaData.coverUrl != undefined
+        })
+        if (fullyLoadedSongs.length < songsCount) {
+            loader = fullyLoadedSongs.filter((song) => { return song }).length / songsCount
+        }
+        else {
+            // Stop checking & Sorting songs
+            clearInterval(scanner)
+            PLAYLIST.sort()
+
+            // Load & Play Song
+            if (totalSongs == 0) {
+                PLAYLIST.loadSong(PLAYLIST.playing != null ? PLAYLIST.playing : 0)
+                activeSkipSong(audio)
+            }
+            loadingBar.remove()
+        }
+        loadingBar.querySelector(".slider").style.width = `${loader * 100}%`
+    }, 100)
 }
 
 // Activate Skip Buttons
 const activeSkipSong = (audio) => {
-    nextButton.addEventListener("click", skipNext)
-    prevButton.addEventListener("click", skipPrev)
-    audio.addEventListener("ended", skipNext)
+    musicPlayer.querySelector(".next-btn").addEventListener("click", PLAYLIST.skipNext)
+    musicPlayer.querySelector(".prev-btn").addEventListener("click", PLAYLIST.skipPrev)
+    audio.addEventListener("ended", PLAYLIST.skipNext)
     audio.addEventListener("timeupdate", () => {
         let duration = isNaN(audio.duration) ? 0 : audio.duration
         let currentTime = audio.currentTime
@@ -143,37 +131,11 @@ const activeSkipSong = (audio) => {
         window.addEventListener("mouseup", changeSongTime)
     })
 }
-const nextButton = musicPlayer.querySelector(".control-btns .next-btn")
-const prevButton = musicPlayer.querySelector(".control-btns .prev-btn")
 const timeSeekbar = musicPlayer.querySelector(".player-controls .progress")
 const seekSlider = timeSeekbar.querySelector(".slider")
 const songDuration = musicPlayer.querySelector(".durations .total")
 const songCurrentTime = musicPlayer.querySelector(".durations .current")
 const musicProgress = musicPlayer.querySelector(".music-progress")
-
-// Skip to Next Song
-const skipNext = () => {
-    let audio = musicPlayer.querySelector("#audio-player")
-    pauseSong(audio)
-    if (PLAYLIST.playing >= PLAYLIST.songs.length - 1) {
-        loadSong(audio, 0)
-    }
-    else {
-        loadSong(audio, ++PLAYLIST.playing)
-    }
-}
-
-// Skip to Previous Song
-const skipPrev = () => {
-    let audio = musicPlayer.querySelector("#audio-player")
-    pauseSong(audio)
-    if (PLAYLIST.playing <= 0) {
-        loadSong(audio, PLAYLIST.songs.length - 1)
-    }
-    else {
-        loadSong(audio, --PLAYLIST.playing)
-    }
-}
 
 // Make seekbar progress by both visual & song time
 const moveSeekSlider = (currentTime, duration) => {
@@ -197,6 +159,18 @@ const changeSongTime = (event) => { // Play song from the new seeked time
 }
 // -------------- //
 
+// Mouse Tracker for Songs-Queue
+const isMouseOverQueue = (event) => {
+    let clickedOn = event.target.classList[0]
+    if (Q_CLASSES.includes(clickedOn) === false) {
+        musicPlayer.classList.remove("show-queue")
+        setTimeout(() => {
+            musicPlayer.removeEventListener("click", isMouseOverQueue)
+        }, 100)
+    }
+}
+const Q_CLASSES = ["songs-q-container", "heading", "song", "number", "thumbnail", "music-artist", "delete", "extend-q", "add-songs-btn"].concat(Playlist.Q_CLS)
+
 // Toggle Loop Mode
 const toggleLoop = (audio) => {
     let currentState = loopButton.classList[2], newState,
@@ -207,16 +181,10 @@ const toggleLoop = (audio) => {
     else newState = LOOPS[0]
     loopButton.classList.replace(currentState, newState)
     if (newState == LOOPS[2]) {
-        PLAYLIST.songs = shuffle(PLAYLIST.songs, PLAYLIST.playing)
+        PLAYLIST.shuffle()
     }
     else if (newState == LOOPS[1]) {
-        PLAYLIST.songs = PLAYLIST.songs.sort((s1, s2) => {
-            let song1 = s1.name.toUpperCase()
-            let song2 = s2.name.toUpperCase()
-            if (song1 < song2) return -1
-            else if (song1 > song2) return 1
-            return 0
-        })
+        PLAYLIST.sort()
     }
     else audio.loop = true
 }

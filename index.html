@@ -9,74 +9,88 @@
     <link rel="stylesheet" href="./Assets/CSS/fonts.css">
     <link rel="stylesheet" href="./Assets/CSS/styles.css">
     <link rel="stylesheet" href="./Assets/CSS/player.css">
+    <link rel="stylesheet" href="./Assets/CSS/queue.css">
     <link rel="icon" type="image/png" href="./Assets/Images/favicon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script type="module" src="./Assets/JavaScript/script.js"></script>
 </head>
 
-<body class="max-height">
-    <section class="launcher logo">
-        <img class="icon" src="./Assets/Images/logo.png" alt="app logo">
-        <h2 class="text">uSic-k</h2>
-    </section>
-    <article class="music-player invisible fade-out">
-        <section class="top-container">
+<body>
+    <main class="max-height">
+        <section class="launcher logo">
+            <img class="icon" src="./Assets/Images/logo.png" alt="logo">
+            <h2 class="text">uSic-k</h2>
+        </section>
+        <article class="music-player invisible fade-out">
+            <section class="top-container">
 
-            <!-- Volume Controls -->
-            <div class="volume-container">
-                <a class="volume-btn icon full"></a>
-                <div class="change-volume">
-                    <div class="volume-level">
-                        <div class="slider"></div>
+                <!-- Volume Controls -->
+                <div class="volume-container">
+                    <a class="volume-btn icon full"></a>
+                    <div class="change-volume">
+                        <div class="volume-level">
+                            <div class="slider"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <a class="logo" href="/">
-                <img class="icon" src="./Assets/Images/logo2.png" alt="app logo">
-                <h2 class="text">uSic-k</h2>
-            </a>
+                <a class="logo" href="/">
+                    <img class="icon" src="./Assets/Images/logo2.png" alt="logo">
+                    <h2 class="text">uSic-k</h2>
+                </a>
 
-            <!-- Dark Mode | Button -->
-            <a class="dark-mode-btn icon"></a>
-        </section>
+                <!-- Songs-Q | Button -->
+                <a class="songs-q-btn icon"></a>
+            </section>
 
-        <!-- Cover & Song Title -->
-        <section class="cover-title-container">
-            <div class="cover-picture">
-                <div class="thumb"></div>
-            </div>
-            <h4 class="music-title no-overflow invisible"></h4>
-            <p class="music-artist no-overflow invisible"></p>
-        </section>
-
-        <section class="player-controls">
-            <audio id="audio-player"></audio>
-
-            <!-- Audio Seekbar Controls -->
-            <div class="music-progress">
-                <div class="progress">
-                    <div class="slider"></div>
+            <!-- Cover & Song Title -->
+            <section class="cover-title-container">
+                <div class="cover-picture">
+                    <div class="thumb"></div>
                 </div>
-                <div class="durations">
-                    <span class="time current">00:00</span>
-                    <span class="time total">00:00</span>
-                </div>
-            </div>
+                <h4 class="music-title no-overflow invisible"></h4>
+                <p class="music-artist no-overflow invisible"></p>
 
-            <!-- Playback Controls -->
-            <div class="control-btns">
-                <a class="loop-btn icon single"></a>
-                <a class="prev-btn icon"></a>
-                <a class="play-btn icon resume"></a>
-                <a class="next-btn icon"></a>
-                <a class="sleeptimer-btn icon"></a>
-            </div>
-        </section>
-    </article>
-    <footer class="copyrights invisible">
-        <small>&copy; 2023 All rights reserved&ensp;<span class="separator">|</span>&ensp;This template is made by
-            <a class="designer" href="https://github.com/Kumara2mahe" target="_blank">Kumara</a></small>
-    </footer>
+                <!-- Dark Mode | Button -->
+                <a class="dark-mode-btn icon"></a>
+            </section>
+
+            <section class="player-controls">
+                <audio id="audio-player"></audio>
+
+                <!-- Audio Seekbar Controls -->
+                <div class="music-progress">
+                    <div class="progress">
+                        <div class="slider"></div>
+                    </div>
+                    <div class="durations">
+                        <span class="time current">00:00</span>
+                        <span class="time total">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Playback Controls -->
+                <div class="control-btns">
+                    <a class="loop-btn icon single"></a>
+                    <a class="prev-btn icon"></a>
+                    <a class="play-btn icon resume"></a>
+                    <a class="next-btn icon"></a>
+                    <a class="sleeptimer-btn icon"></a>
+                </div>
+            </section>
+
+            <!-- Songs-Q Container & Controls -->
+            <section class="songs-q-container">
+                <h4 class="heading">Songs - Q</h4>
+                <div class="extend-q">
+                    <a class="add-songs-btn">Add songs to queue</a>
+                </div>
+            </section>
+        </article>
+        <footer class="copyrights invisible">
+            <small>&copy; 2023 All rights reserved&ensp;<span class="separator">|</span>&ensp;This template is made by
+                <a class="designer" href="https://github.com/Kumara2mahe" target="_blank">Kumara</a></small>
+        </footer>
+    </main>
 </body>
 
 </html>

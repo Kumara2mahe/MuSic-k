@@ -1,0 +1,151 @@
+/* --------------------- Songs-Q | Styles -----------------------
+-------------------------------------------------------------------- */
+
+.music-player.show-queue .songs-q-container {
+    display: block;
+}
+
+.music-player .songs-q-container {
+    counter-reset: songindex;
+    display: none;
+    background-color: var(--eerieblack);
+    color: var(--greyweb);
+    width: 100%;
+    max-height: 70%;
+    padding: 1em;
+    border: 0.2em solid var(--smokyblack);
+    border-radius: 1em;
+    left: 0;
+    overflow: auto;
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+    cursor: default;
+}
+
+.music-player .songs-q-container .heading {
+    text-align: center;
+    margin-top: 0;
+    font-size: 1.1em;
+}
+
+/* ------ Player-Queue (Song) | Styles ----- */
+
+.music-player .songs-q-container .song {
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.1fr;
+    grid-auto-rows: 1fr;
+    align-items: center;
+    gap: 1.5em;
+    opacity: 0.7;
+}
+
+.music-player .songs-q-container .song .number::before {
+    counter-increment: songindex;
+    content: counter(songindex, decimal-leading-zero);
+}
+
+/* --- Song Details | Styles --- */
+.music-player .songs-q-container .song .details {
+    display: grid;
+    grid-template-columns: 0.2fr 1fr;
+    align-items: center;
+    gap: 1em;
+}
+
+.music-player .songs-q-container .song .details:hover {
+    cursor: pointer;
+}
+
+.music-player .songs-q-container .song .details:hover .music-title {
+    color: var(--mauvelous);
+}
+
+.music-player .songs-q-container .song .thumbnail {
+    width: 1.75em;
+    height: 1.75em;
+    background: url("../Images/favicon.png") no-repeat center/cover;
+    border: 0.1em solid transparent;
+}
+
+/* -- Playing Song | Styles -- */
+.music-player .songs-q-container .song.playing {
+    background-color: var(--jet);
+    opacity: 1;
+    border-top: 0.1em solid var(--black);
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.music-player .songs-q-container .song.playing .thumbnail {
+    background-image: url("../Images/logo2.png");
+    background-color: var(--davysgrey);
+    border-color: var(--violetred);
+    border-radius: 50%;
+    animation: spinner 5s linear infinite;
+    animation-play-state: paused;
+}
+
+.music-player.play .songs-q-container .song.playing .thumbnail {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+.music-player .songs-q-container .song .music-title {
+    width: auto;
+}
+
+.music-player .songs-q-container .song .music-artist {
+    width: 80%;
+}
+
+/* --- Delete Icon | Styles --- */
+.music-player .songs-q-container .song .number,
+.music-player .songs-q-container .song .delete {
+    text-align: right;
+}
+
+
+.music-player .songs-q-container .song .delete {
+    background: url("../Images/Icons/remove.png") no-repeat center/cover;
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.music-player .songs-q-container .song .delete:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.music-player .songs-q-container .song .delete:active {
+    background-color: rgba(16, 16, 16, 0.5);
+}
+
+/* ------ Player-Queue (Add-Btn) | Styles ----- */
+
+.music-player .songs-q-container .extend-q {
+    text-align: center;
+    margin: 2em 0;
+}
+
+.music-player .songs-q-container .extend-q .add-songs-btn {
+    display: inline-block;
+    color: var(--violetred);
+    padding: 0.5em 1em;
+    border: 0.1em solid var(--violetred);
+    border-radius: 2em;
+}
+
+.music-player .songs-q-container .extend-q .add-songs-btn:hover {
+    color: var(--mauvelous);
+}
+
+.music-player .songs-q-container .extend-q .add-songs-btn:active {
+    color: var(--fieryrose);
+    border-color: var(--fieryrose);
+}

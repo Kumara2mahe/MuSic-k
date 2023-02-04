@@ -1,9 +1,10 @@
 
-import { makeVisible, setupPlayback, pauseSong } from "./playback.js"
+import { Playlist } from "./playlist.js"
+import { setupPlayback } from "./playback.js"
 import { setVolumeControls } from "./volume.js"
 
 const copyrights = document.querySelector("footer.copyrights")
-const musicPlayer = document.querySelector(".music-player")
+const musicPlayer = Playlist.musicPlayer
 
 // ------- Loading Launcher ------- //
 window.addEventListener("DOMContentLoaded", () => {
@@ -11,13 +12,13 @@ window.addEventListener("DOMContentLoaded", () => {
     launcher.classList.add("loaded")
     setTimeout(() => {
         launcher.classList.add("fade-out")
-        makeVisible(musicPlayer)
+        Playlist.makeVisible(musicPlayer)
         switchDarkMode() // Switch to dark mode if choosen
         setTimeout(() => {
             launcher.remove()
             musicPlayer.classList.replace("fade-out", "fade-in")
-            document.body.classList.remove("max-height")
-            makeVisible(copyrights)
+            document.querySelector("main").classList.remove("max-height")
+            Playlist.makeVisible(copyrights)
         }, 300)
     }, 1000)
 })
@@ -44,11 +45,10 @@ const darkModeBtn = musicPlayer.querySelector(".dark-mode-btn")
 darkModeBtn.addEventListener("click", switchDarkMode)
 
 // Set up Playback
-const audio = musicPlayer.querySelector("#audio-player")
-setupPlayback(audio)
+setupPlayback()
 
 // Volume Controls
-setVolumeControls(audio)
+setVolumeControls(Playlist.audioElement)
 
 // ------ SleepTimer | Scripts ----- //
 const sleepTimerBtn = musicPlayer.querySelector(".control-btns .sleeptimer-btn"), ON = "on"
@@ -62,7 +62,7 @@ sleepTimerBtn.addEventListener("click", () => {
             sleepTimerBtn.classList.add(ON)
             setTimeout(() => {
                 sleepTimerBtn.classList.remove(ON)
-                pauseSong(audio)
+                Playlist.pauseSong()
             }, minutes * 6 * 10 ** 4)
         }
     }

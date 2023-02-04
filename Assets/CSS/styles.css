@@ -3,11 +3,14 @@
 
 :root {
     --coral: #FD8050;
+    --black: #000;
     --darkred: #8B0000;
     --davysgrey: #505050;
     --eerieblack: #252525;
     --fieryrose: #FD4F66;
+    --greenyellow: #ADFF2F;
     --greyweb: #808080;
+    --jet: #363636;
     --mauvelous: #EC909C;
     --purple: #800080;
     --silverchalice: #AAA;
@@ -30,19 +33,10 @@ html {
 }
 
 body {
-    font-family: "Poppins", sans-serif;
-    font-size: 0.9em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     background: var(--gradient-bottom) no-repeat center/cover;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    height: 100vh;
-    min-height: 650px;
     margin: 0;
-    padding: 3em;
 }
 
 body.dark-mode {
@@ -110,6 +104,37 @@ a.icon:active {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* ---------------- Loading-Bar | Styles -------------------- */
+.loading-bar {
+    width: 100%;
+    height: 0.5em;
+    margin: 0;
+    border-top: 0.1em solid var(--davysgrey);
+    position: fixed;
+    top: 0;
+    z-index: 20;
+}
+
+.loading-bar .slider {
+    background-color: var(--greenyellow);
+    width: 20%;
+    height: 100%;
+    border-radius: 0 1em 1em 0;
+}
+
+main {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    min-height: 650px;
+    margin: 0;
+    padding: 0 0 3em;
 }
 
 /* ----------------------- Launcher | Styles -------------------------

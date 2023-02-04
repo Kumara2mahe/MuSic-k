@@ -4,6 +4,7 @@
 .music-player {
     background-color: var(--white);
     width: 350px;
+    margin-top: 3em;
     padding: 1em 1.5em;
     border-radius: 1em;
     box-shadow: 0 0.3em 2em var(--eerieblack);
@@ -11,9 +12,9 @@
     position: relative;
 }
 
-/* .music-player.show-quenue {
+.music-player.show-queue {
     background-color: var(--whitesmoke);
-} */
+}
 
 body.dark-mode .music-player {
     background-color: var(--smokyblack);
@@ -67,6 +68,7 @@ body.dark-mode .music-player {
     border-radius: 0 0 1em 1em;
     position: absolute;
     top: 100%;
+    z-index: 10;
     cursor: pointer;
 }
 
@@ -110,14 +112,15 @@ body.dark-mode .logo:not(.launcher) h2 {
     color: var(--silverchalice);
 }
 
-/* -- Dark Mode Button | Styles -- */
-.music-player .top-container .dark-mode-btn {
-    background-image: url("../Images/Icons/dark_mode.png");
+/* -- Songs-Q Button | Styles -- */
+.music-player .top-container .songs-q-btn {
+    background-image: url("../Images/Icons/queue.png");
 }
 
 /* ---------------- Cover & Title-Container | Styles ---------------- */
 .music-player .cover-title-container {
     margin: 1.5em 0;
+    position: relative;
 }
 
 /* ---------- Music (Cover) | Styles --------- */
@@ -169,16 +172,25 @@ body.dark-mode .logo:not(.launcher) h2 {
     z-index: 5;
 }
 
+/* -- Dark Mode Button | Styles -- */
+.music-player .cover-title-container .dark-mode-btn {
+    background-image: url("../Images/Icons/dark_mode.png");
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+}
+
 .music-player .music-title {
     color: var(--fieryrose);
-    width: 90%;
+    width: 85%;
     margin-bottom: 0.25em;
 }
 
 .music-player .music-artist {
     font-size: 0.8em;
     color: var(--greyweb);
-    width: 75%;
+    width: 70%;
     margin-top: 0;
 }
 
@@ -313,9 +325,10 @@ body.dark-mode .music-progress .durations {
 
 @media (max-width: 380px) {
 
-    body {
+    main {
         font-size: 0.8em;
-        padding: 1.5em;
+        margin: 0 1.5em;
+        padding: 0 0 1.5em;
     }
 
     .logo .icon,
@@ -331,7 +344,12 @@ body.dark-mode .music-progress .durations {
 
     .music-player {
         width: 100%;
+        margin-top: 1.5em;
         padding: 0.75em 1em;
+    }
+
+    .loading-bar {
+        width: 100vw;
     }
 
     /* ---------- Music (Cover) | Styles --------- */
