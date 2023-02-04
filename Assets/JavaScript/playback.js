@@ -65,10 +65,7 @@ const loadAllSongs = (input, totalSongs) => {
         for (let song; sIndex < sLength; sIndex++) {
             jsmediatags.read(song = songs.item(sIndex), {
                 onSuccess: data => PLAYLIST.getMetaData(song, data.tags),
-                onError: () => {
-                    alert(`No MetaData Found from - (${song.name})\nTry again with proper Audio file.`)
-                    window.location.reload()
-                }
+                onError: error => PLAYLIST.getMetaData(song, error) // Handling song without metadata
             })
         }
         songDataVerifier(totalSongs)

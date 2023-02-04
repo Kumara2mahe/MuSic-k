@@ -144,8 +144,8 @@ export class Playlist {
         Playlist.audioElement.srcObj = null
         Playlist.musicPlayer.classList.remove("play")
         this.#updateSongCover()
-        Playlist.makeInVisible(Playlist.audioTitle, "")
-        Playlist.makeInVisible(Playlist.audioArtist, "")
+        Playlist.makeInVisible(Playlist.audioTitle)
+        Playlist.makeInVisible(Playlist.audioArtist)
         Playlist.pauseAnimation()
     }
     /**
@@ -170,14 +170,14 @@ export class Playlist {
      * @param {Object} songInfo contains the song title, artist name and cover picture url as a object
      */
     extendQueue(songInfo) {
-        let songDetail = document.createElement("div"), sArtist
+        let songDetail = document.createElement("div")
         songDetail.classList.add("song")
-        sArtist = songInfo.artist ? `<p class="music-artist no-overflow">${songInfo.artist}</p>` : "unknown"
         songDetail.innerHTML = `<span class="number"></span>
                                 <div class="details">
                                     <div class="thumbnail"></div>
                                     <div class="info no-overflow">
-                                        <h4 class="music-title no-overflow">${songInfo.title}</h4>${sArtist}
+                                        <h4 class="music-title no-overflow">${songInfo.title}</h4>
+                                        <p class="music-artist no-overflow">${songInfo.artist ? songInfo.artist : "unknown"}</p>
                                     </div>
                                 </div>
                                 <span class="delete"></span>`
@@ -332,17 +332,20 @@ export class Playlist {
      * @param {HTMLElement} element which needs to be visible from hidden
      * @param {string} newContent string which is used as the element's new innerHTML
      */
-    static makeVisible = (element, newContent = null) => {
-        if (newContent) element.innerHTML = newContent
-        element.classList.replace(this.VISIBILITY[0], this.VISIBILITY[1])
+    static makeVisible = (element, newContent) => {
+        if (newContent === undefined || newContent != this.defaultArtist) {
+            if (newContent) element.innerHTML = newContent
+            element.classList.replace(this.VISIBILITY[0], this.VISIBILITY[1])
+        }
+        else this.makeInVisible(element)
     }
     /**
      * To make a element back to hidden
      * @param {HTMLElement} element which needs to be hidden again
      * @param {string} newContent string which is used as the element's new innerHTML
      */
-    static makeInVisible = (element, newContent = null) => {
-        if (newContent) element.innerHTML = newContent
+    static makeInVisible = (element, newContent) => {
+        element.innerHTML = newContent ? newContent : ""
         element.classList.replace(this.VISIBILITY[1], this.VISIBILITY[0])
     }
     /**
