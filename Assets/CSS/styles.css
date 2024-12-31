@@ -181,6 +181,7 @@ main {
 /* ------------------ Footer-copyrights | Styles ----------------- */
 
 footer.copyrights {
+    text-align: center;
     margin-top: 2em;
 }
 
